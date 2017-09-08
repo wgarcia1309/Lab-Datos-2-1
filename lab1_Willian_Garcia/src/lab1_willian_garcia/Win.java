@@ -1,9 +1,10 @@
-
 package lab1_willian_garcia;
 
-import java.util.StringTokenizer;
+import java.util.Stack;
 import static lab1_willian_garcia.Lab1_Willian_Garcia.tree;
+
 public class Win extends javax.swing.JFrame {
+
     public Win() {
         initComponents();
     }
@@ -20,6 +21,7 @@ public class Win extends javax.swing.JFrame {
         msg = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -29,86 +31,89 @@ public class Win extends javax.swing.JFrame {
             }
         });
         msg.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                msgKeyPressed(evt);
-            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 msgKeyReleased(evt);
             }
         });
 
-        jLabel1.setText("Usted quizo decir:");
-
-        jLabel2.setText("jLabel2");
+        jLabel3.setFont(new java.awt.Font("Copperplate Gothic Light", 1, 18)); // NOI18N
+        jLabel3.setText("Predictor");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(113, 113, 113)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(msg, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel2)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(msg, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(51, 51, 51)
+                                .addComponent(jLabel2))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(jLabel3)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(94, 94, 94)
+                .addGap(21, 21, 21)
+                .addComponent(jLabel3)
+                .addGap(38, 38, 38)
                 .addComponent(msg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void msgKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_msgKeyPressed
-       
-    }//GEN-LAST:event_msgKeyPressed
 
     private void msgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_msgActionPerformed
 
     private void msgKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_msgKeyReleased
-         String txt=msg.getText().toUpperCase();
-        //verificar texto con expresion regular numeros, y espacios vacios..
-        Nodo buscado=tree.s(txt);
-            tree.printS();
-        buscado.p();
-                buscado.printS2();
-        //Armar palabras;
-        String base=buscado.getbBse(),cp=buscado.getCp().substring(1);
-        StringTokenizer st =new StringTokenizer(cp,"$");
-        if(!st.hasMoreTokens()){
-            System.out.println("No hay sugerencias");
-        }else{//revisar //no funcionara cuando tengo muchos hijos....
-            while(st.hasMoreTokens()){
-                String ms1=st.nextToken();
-                if(!ms1.contains("*")){
-                    System.out.println(base+ms1);
-                }else{
-                    StringTokenizer st2 =new StringTokenizer(ms1,"*");
-                        String baset=base;
-                    while(st2.hasMoreTokens()){
-                        String fn=baset + st2.nextToken();
-                        System.out.println(fn);
-                        baset=fn;
+        String txt = msg.getText().toUpperCase();
+        jLabel1.setText("");
+        if (txt == null || txt.equals("") || !txt.matches("[a-zA-Z]+")) {
+            jLabel2.setText("caracteres invalidos");
+        } else {
+            jLabel1.setText("Usted quizo decir:");
+            Nodo buscado = tree.s(txt);
+            //tree.printS();
+            if (tree.getbase() != 0) {
+                buscado.p();
+                //buscado.printS2();
+                Stack<String> x = buscado.getP();
+                int j = 0;
+                jLabel2.setText("<html><body>");
+                for (int i = 0; i < x.size(); i++) {
+                    if (!txt.equalsIgnoreCase(x.get(i)) && j <= 4) {
+                        jLabel2.setText(jLabel2.getText() + x.get(i).replace("-", "") + "<br>");
+                        j++;
                     }
+                }
+                jLabel2.setText(jLabel2.getText() + "</body></html>");
+                buscado.delp();
+                if (jLabel2.getText().equals("<html><body></body></html>")) {
+                    jLabel1.setText("");
+                    jLabel2.setText("No existen sugerencias");
+                }
+            }else{
+                jLabel1.setText("");
+                jLabel2.setText("No existen sugerencias");
             }
         }
-        }
-            
     }//GEN-LAST:event_msgKeyReleased
 
+    
     /**
      * @param args the command line arguments
      */
@@ -162,6 +167,7 @@ public class Win extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField msg;
     // End of variables declaration//GEN-END:variables
 }

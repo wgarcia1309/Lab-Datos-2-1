@@ -20,11 +20,11 @@ public class Lab1_Willian_Garcia {
                     a=br.readLine();
                 }
             in.close();
-        System.out.println("lvl: ");
+        /*System.out.println("lvl: ");
         tree.lvl(tree);
             System.out.println("Pre:");
             tree.pre(tree);
-            System.out.println("");
+            System.out.println("");*/
         Win win2= new Win();
         win2.setLocationRelativeTo(null);
         win2.setResizable(false);
